@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <img src="{{ url_for('static', filename='rat.jpg') }}" style="width:50px;height:40px">
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="{{ url_for('index') }}">Strona główna <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('terms') }}">Zasady</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('rewards') }}">Nagrody</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('access') }}">Wykup dostęp</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('login') }}">Logowanie</a>
+        </li>
+      </ul>
+    </div>
+  </nav>

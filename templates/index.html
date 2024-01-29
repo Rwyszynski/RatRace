@@ -1,0 +1,41 @@
+{% extends "mother.html" %}
+
+{% block body_up %}
+
+<div class="container">
+
+    <div class="row">
+      <div class="col">
+        
+      </div>
+      <div class="col-10" style="text-align: center;">
+        <h1>RatRace game</h1>
+        
+        <h2>Gra rozpocznie się za:<br><br>
+        
+        {{ times }}
+        </h2>
+        <br>
+        <h2>Aktualny czas:</h2>
+          <h3 class="actual_time"></h3>
+      </div>
+      <div class="col">
+        
+      </div>
+    </div>
+  </div>
+  <script>
+    let time
+    (async () => {
+        const res = await fetch("http://worldtimeapi.org/api/timezone/Europe/Lisbon").then(res=>res.json());
+        console.log(res)
+        time=res.utc_datetime
+        time=time.slice(11,19)
+        document.querySelector(".actual_time").innerHTML = time
+    })();
+</script>
+{% endblock %}
+
+{% block body_down %}
+
+{% endblock %}
