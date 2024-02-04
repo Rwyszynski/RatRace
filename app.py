@@ -1,5 +1,5 @@
 from sqlite3.dbapi2 import SQLITE_TRANSACTION
-from flask import Flask, render_template, flash, g, url_for, redirect
+from flask import Flask, render_template, flash, g, url_for, redirect, session, request
 from datetime import datetime
 
 
@@ -66,6 +66,20 @@ class User:
             password_characters)for i in range(3))
         self.password = random_password
 
+    def login_user(self):
+
+        db = get_db()
+        sql_statement = 'select id, name, email, password, is_active, is_admin from users where name=?'
+        cur = db.execute(sql_statement, [self.user])
+        user_record = cur.fetchone()
+
+        if user_record != None and self.check_password(user_record['password'], self.password):
+            return user_record
+        else:
+            self.user = None
+            self.password = None
+            return None
+
 
 @app.route('/init_app')
 def init_app():
@@ -87,6 +101,35 @@ def init_app():
     flash('user {} with password {} has been created'.format(
         user_pass.user, user_pass.password))
     return redirect(url_for('index'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html', active_menu='login')
+    else:
+        user_name = '' if 'user_name' not in request.form else request.form['user_name']
+        user_pass = '' if 'user_pass' not in request.form else request.form['user_pass']
+
+        login = User(user_name, user_pass)
+        login_record = login.login_user()
+
+        if login_record != None:
+            session['user'] = user_name
+            flash('Login succesfull, welcome{}'.format(user_name))
+            return redirect(url_for('index'))
+        else:
+            flash('Login failed, try again')
+            return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+
+    if 'user' in session:
+        session.pop('user', None)
+        flash('You are logged out')
+    return redirect(url_for('login'))
 
 
 @app.route('/')
@@ -113,8 +156,3 @@ def rewards():
 @app.route('/access')
 def access():
     return render_template('access.html')
-
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
