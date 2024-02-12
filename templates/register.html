@@ -1,0 +1,48 @@
+{% extends "mother.html" %}
+{% block title %}Zarejestruj{% endblock %}
+{% block body_up %}
+
+{% for mesg in get_flashed_messages() %}
+<h1>{{ mesg }}</h1>
+{% endfor %}
+
+
+<div class="container">
+
+  <div class="row">
+    <div class="col">Nowy użytkownik</div>
+      <div class="col-10" style="text-align: center;">
+    <div class="row mb-3">
+  <div class="col-5 h1">Nowy użytkownik</div>
+
+        <form id="user_form" action="{{ url_for( 'register' }}" methods="POST">
+
+  <div class="row mb-3">
+    <div class="col-1 col-form-label"> <label for="user_name">Nazwa użytkownika</label></div>
+    <input type="text" class="form-control" id="user_name" placeholder="Robert123" name="user_name "value="{{ user.user_name }}" class="form-control"><br>
+  </div>
+
+  <div class="row mb-3">
+    <div class="form-group col-md-6">
+      <div class="col-1 col-form-label"><label for="email">Email</label></div>
+      <input type="email" class="form-control" id="email" placeholder="Email" name="email" value="{{ user.email }}">
+    </div>
+	</div>
+
+    <div class="row mb-3">
+      <div class="col-1 col-form-label"><label for="user_pass">Hasło</label>
+      <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="Password"><br>
+      </div>
+    </div>
+
+	  <div class="col1">
+      <button type="submit" class="btn btn-primary" value="Send">Zarejestruj</button>
+ 	  </div>
+          </form>
+
+
+    </div>
+      </div>
+  </div>
+</div>
+{% endblock %}

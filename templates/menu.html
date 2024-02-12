@@ -18,10 +18,20 @@
           <a class="nav-link" href="{{ url_for('access') }}">Wykup dostęp</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {{ 'active' if active_menu=='login' }} href =""{{ url_for('login') }}" tabindex="-1">Logowanie</a>
+          <a class="nav-link {{ 'active' if active_menu=='login' }}" href="{{ url_for('login') }}" tabindex="-1">Logowanie</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {{ 'active' if active_menu=='logout' }} href =""{{ url_for('logout') }}" tabindex="-1">Logout {{ session['user'] if 'user' in session }}</a>
+          <a class="nav-link {{ 'active' if active_menu=='logout' }}" href ="{{ url_for('logout') }}" tabindex="-1">Wyloguj {{ session['user'] if 'user' in session }}</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expand="false">
+            Użytkownicy
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{{ url_for('users') }}">Lista użytkowników</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('register') }}">Zarejestruj się</a></li>
+          </ul>
         </li>
       </ul>
     </div>

@@ -2,6 +2,12 @@
 {% block title %}Ratrace Strona główna{% endblock %}
 {% block body_up %}
 
+
+{% for mesg in get_flashed_messages() %}
+<h1>{{ mesg }}</h1>
+{% endfor %}
+
+
 <div class="container">
 
     <div class="row">
@@ -25,15 +31,19 @@
     </div>
   </div>
   <script>
-    let time
-    (async () => {
-        const res = await fetch("http://worldtimeapi.org/api/timezone/Europe/Lisbon").then(res=>res.json());
-        console.log(res)
-        time=res.utc_datetime
-        time=time.slice(11,19)
-        document.querySelector(".actual_time").innerHTML = time
-    })();
-</script>
+    function timer() {
+      let date = new Date();
+      let hour = date.getHours();
+      let min = date.getMinutes();
+      let sec = date.getSeconds();
+      let now = ""+hour+
+      ((min<10)?":0":":")+min+
+      ((sec<10)?":0":":")+sec;
+      document.getElementById("f1").time.value = now;
+      setTimeout("timer()", 1000);
+    }
+    timer();
+    </script>
 {% endblock %}
 
 {% block body_down %}

@@ -48,6 +48,14 @@ class User:
         pwdhash = binascii.hexlify(pwdhash)
         return (salt + pwdhash).decode('ascii')
 
+    def verify_password(self, stored_password, provided_password):
+        salt = stored_password[:64]
+        stored_password = stored_password[64:]
+        pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode(
+            'utf-8'), salt.encode(ascii), 100000)
+        pwdhash = binascii.hexlify(pwdhash).decode('ascii')
+        return pwdhash == stored_password
+
     def check_password(self, stored_password, provided_password):
         salt = stored_password[:64]
         stored_password = stored_password[64:]
@@ -156,3 +164,75 @@ def rewards():
 @app.route('/access')
 def access():
     return render_template('access.html')
+
+
+@app.route('/users')
+def users():
+    return 'not implemented'
+
+
+@app.route('/user_status/<action>/<username>')
+def user_status(action, user_name):
+    return 'not implemented'
+
+
+@app.route('/edit_user/<user_name>', methods=['GET', 'POST'])
+def edit_user(user_name):
+    return 'not implemented'
+
+
+@app.route('/user_delete/<user_name>')
+def delete_user(user_name):
+    return 'not implemented'
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+
+    if not 'user' in session:
+        return redirect(url_for('login'))
+    login = session['user']
+
+    db = get_db()
+    message = None
+    user = {}
+
+    if request.method == 'GET':
+        return render_template('register.html', active_menu='users', user=user)
+    else:
+        user['user_name'] = '' if not 'user_name' in request.form else request.form['user_name']
+        user['email'] = '' if not 'email' in request.form else request.form['email']
+        user['user_pass'] = '' if not 'user_pass' in request.form else request.form['user_pass']
+
+        cursor = db.execute(
+            'select count(*) as cnt from users where name = ?', [user['user_name']])
+        record = cursor.fetchone()
+        is_user_name_unique = (record['cnt'] == 0)
+
+        cursor = db.execute(
+            'select count(*) as cnt from users where email = ?', [user['email']])
+        record = cursor.fetchone()
+        is_user_email_unique = (record['cnt'] == 0)
+
+        if user['user_name'] == '':
+            message = 'Name cannot be empty'
+        elif user['email'] == '':
+            message = 'Email cannot be empty'
+        elif user['user_pass'] == '':
+            message = 'Password cannot be empty'
+        elif not is_user_name_unique:
+            message = 'User with name{} already exist'.format(
+                user['user_name'])
+        elif not is_user_email_unique:
+            message = 'User with the email {} already exist'.format(
+                user['email'])
+
+        if not message:
+            user_pass = User(user['username'], user['user_pass'])
+            password_hash = user_pass.hash_password()
+            sql_statement = '''insert into users(name, email, password, is_active, is_admin) values(?,?,?, True, False);'''
+            db.execute(sql_statement, [
+                       user['user_name'], user['email'], password_hash])
+            db.commit()
+            flash('User {} created'.format(message))
+            return render_template('register.html', active_menu='users', user=user)
