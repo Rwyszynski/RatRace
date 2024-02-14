@@ -81,7 +81,7 @@ class User:
         cur = db.execute(sql_statement, [self.user])
         user_record = cur.fetchone()
 
-        if user_record != None and self.check_password(user_record['password'], self.password):
+        if user_record != None and self.verify_password(user_record['password'], self.password):
             return user_record
         else:
             self.user = None
@@ -143,12 +143,7 @@ def logout():
 @app.route('/')
 def index():
 
-    while True:
-
-        teraz = datetime.now()
-        times = teraz.strftime('%H:%M:%S')
-        return render_template('index.html', times=times)
-        teraz.sleep(1)
+    return render_template('index.html')
 
 
 @app.route('/terms')
@@ -190,8 +185,7 @@ def delete_user(user_name):
 def register():
 
     if not 'user' in session:
-        return redirect(url_for('login'))
-    login = session['user']
+        redirect(url_for('login'))
 
     db = get_db()
     message = None
@@ -228,11 +222,14 @@ def register():
                 user['email'])
 
         if not message:
-            user_pass = User(user['username'], user['user_pass'])
+            user_pass = User(user['user_name'], user['user_pass'])
             password_hash = user_pass.hash_password()
             sql_statement = '''insert into users(name, email, password, is_active, is_admin) values(?,?,?, True, False);'''
             db.execute(sql_statement, [
                        user['user_name'], user['email'], password_hash])
             db.commit()
+            flash('User {} created'.format(user['user_name']))
+            return redirect(url_for('users'))
+        else:
             flash('User {} created'.format(message))
             return render_template('register.html', active_menu='users', user=user)

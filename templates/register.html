@@ -13,9 +13,9 @@
     <div class="col">Nowy użytkownik</div>
       <div class="col-10" style="text-align: center;">
     <div class="row mb-3">
-  <div class="col-5 h1">Nowy użytkownik</div>
 
-        <form id="user_form" action="{{ url_for( 'register' }}" methods="POST">
+
+        <form id="user_form" action="{{ url_for( 'register') }}" methods="POST">
 
   <div class="row mb-3">
     <div class="col-1 col-form-label"> <label for="user_name">Nazwa użytkownika</label></div>
@@ -31,7 +31,7 @@
 
     <div class="row mb-3">
       <div class="col-1 col-form-label"><label for="user_pass">Hasło</label>
-      <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="Password"><br>
+      <input type="password" class="form-control" id="user_pass" name="user_pass" placeholder="Password" value="{{ user.user_pass }}"><br>
       </div>
     </div>
 
