@@ -14,7 +14,7 @@ Login
 
 
     <div class="container" align="row d-flex justify-content-center">
-        <form method="POST" action={{ url_for('login') }} >
+        <form method="POST" action={{ url_for('login') }}>
             <div class="uform-row">
                 <div="col-5 h1">Zaloguj się do aplikacji</div>
             </div><br>
@@ -22,7 +22,7 @@ Login
             <div class="row mt-3">
                 <div class="input-group"><label for="user_name">Nazwa użytkownika</label></div>
                 <div class="col-4">
-                    <input type="text" id="user_name" class="form-control" placeholder="Robercik123">
+                    <input type="text" id="user_name" class="form-control" name="user_name" placeholder="Robercik123">
                     <div class="form-text text-muted">
                         <h5>Wpisz swój Nick do aplikacji</h5>
                       </div>
@@ -30,7 +30,7 @@ Login
             </div>
 
             <div class="row mt-3">
-                <div class="input-group"><label for="user_pass">Hasło</label></div>
+                <div class="input-group"><label for="user_pas">Hasło</label></div>
                 <div class="col-4">
                     <input type="password" id="user_pass" name="user_pass" class="form-control" aria-describedby="passwordHelpBlock" placeholder="***">
                     <small id="passwordHelpBlock" class="form-text text-muted">

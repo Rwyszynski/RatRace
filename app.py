@@ -41,7 +41,7 @@ class User:
         self.password = password
 
     def hash_password(self):
-        os_urandom_static = b'\xb9\xed\xbev\x02v\xb1 K\x01\xf8\xb3\x04\x0b|\x975\x96\xef7\xbd\xd3\x18\xdb\xe2\x05J\xd4\x7f:\xa8\xaa\xadJ\xe8\x1bn\xea\xba\x96b\xa2\xb3\x96@\x7fJ\xdcaDgR\xe4j7\n\x82X\r\xdc'
+        os_urandom_static = b"\xb9\xed\xbev\x02v\xb1 K\x01\xf8\xb3\x04\x0b|\x975\x96\xef7\xbd\xd3\x18\xdb\xe2\x05J\xd4\x7f:\xa8\xaa\xadJ\xe8\x1bn\xea\xba\x96b\xa2\xb3\x96@\x7fJ\xdcaDgR\xe4j7\n\x82X\r\xdc"
         salt = hashlib.sha256(os_urandom_static).hexdigest().encode('ascii')
         pwdhash = hashlib.pbkdf2_hmac(
             'sha512', self.password.encode('utf-8'), salt, 100000)
@@ -52,7 +52,7 @@ class User:
         salt = stored_password[:64]
         stored_password = stored_password[64:]
         pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode(
-            'utf-8'), salt.encode(ascii), 100000)
+            'utf-8'), salt.encode('ascii'), 100000)
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
 
@@ -92,7 +92,7 @@ class User:
 @app.route('/init_app')
 def init_app():
     db = get_db()
-    sql_statement = 'select count(*) as cnt from users where is_active and is_admin'
+    sql_statement = 'select count(*) as cnt from users where is_active and is_admin;'
     cur = db.execute(sql_statement)
     active_admins = cur.fetchone()
 
@@ -102,7 +102,7 @@ def init_app():
 
     user_pass = User()
     user_pass.get_random_user_password()
-    sql_statement = ''' insert into users (name, email, password, is_active, is_admin) values(?,?,?,True, True);'''
+    sql_statement = ''' insert into users(name, email, password, is_active, is_admin) values(?,?,?,True, True);'''
     db.execute(sql_statement, [user_pass.user,
                'robo@cool.pl', user_pass.hash_password()])
     db.commit()
@@ -185,7 +185,8 @@ def delete_user(user_name):
 def register():
 
     if not 'user' in session:
-        redirect(url_for('login'))
+        return redirect(url_for('login'))
+    login = session['user']
 
     db = get_db()
     message = None
@@ -231,5 +232,5 @@ def register():
             flash('User {} created'.format(user['user_name']))
             return redirect(url_for('users'))
         else:
-            flash('User {} created'.format(message))
+            flash('Error {}'.format(message))
             return render_template('register.html', active_menu='users', user=user)

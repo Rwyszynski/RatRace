@@ -37,8 +37,7 @@
           return `${i}`.padStart(2, "0");
       }
 
-      //funkcja będzie przyjmować obiekt z danymi
-      //zakładam, że nie wszystkie dane zostaną przekazane
+
       function calculateTimeDifference({year, month, day, hour = 0, minutes = 0, seconds = 0}) {
           const now = new Date();
       
@@ -92,7 +91,7 @@
           
               if (!endTime) {
                   element.innerHTML = `
-                      Do ważnej daty pozostało:
+                      Do rozpoczęcia gry pozostało pozostało:<br>
                       <b>${days} dni
                       ${hours} godzin
                       ${minutes} minut i
@@ -106,7 +105,9 @@
           }
       }
 
-      showTimer("2024-02-24-18-01");
+      showTimer("2024-03-24-18-01");
+
+      // (Komentarz nr.3) Fukcja powinna pobierać żadaną datę z BD, oraz wyświetlać lokalizację która też jest w bazie danych
   </script>
 {% endblock %}
 
